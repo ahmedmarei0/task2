@@ -24,9 +24,9 @@ class EnsureTokenIsValid
                 return response()->json(['token_absent'], 500);
             }
             if(isset($apy['sub']))
-                session()->put('user_id', $apy['sub']);
+                $request->user_id = $apy['sub'];
             if(isset($apy['roles_and_permissions']))
-                session()->put('roles_and_permissions', $apy['roles_and_permissions']);
+                $request->roles_and_permissions =json_decode($apy['roles_and_permissions']);
 
             // return response()->json($apy, 200);
         } catch (\Tymon\JWTAuth\Exceptions\TokenExpiredException $e) {

@@ -22,9 +22,9 @@ class ImageService
     public function upload(ImageRequest $request)
     {
         try {
-            $rolesAndPermissions = json_decode(session()->get('roles_and_permissions'));
+        $rolesAndPermissions = request()->roles_and_permissions;
             if ($rolesAndPermissions->admin && $rolesAndPermissions->admin->create) {
-            $user_id = session()->get('user_id');
+            $user_id = request()->user_id;
 
             $imageName = $request->file('image')->store('images');
             // insert into database
@@ -43,11 +43,10 @@ class ImageService
     }
     public function getUserImage()
     {
-        if (session()->has('roles_and_permissions')) {
-            $rolesAndPermissions = json_decode(session()->get('roles_and_permissions'));
-            // return $rolesAndPermissions->admin->read;
+        $rolesAndPermissions = request()->roles_and_permissions;
+        if ($rolesAndPermissions) {
             if ($rolesAndPermissions->admin && $rolesAndPermissions->admin->read) {
-                $userImages = $this->imageRepository->getUserImage();
+                $userImages = $this->imageRepository->getUserImage(request()->user_id);
                 return $this->responseMessage(true, 200, 'user image', $userImages);
             } else {             
                 return $this->responseMessage(false, 403, 'You do not have permission to view this resource');

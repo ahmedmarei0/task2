@@ -14,9 +14,7 @@ class ImageRepository
         return $userImage;
     }
 
-    public function getUserImage(){
-        
-            $userId = session()->get('user_id');
+    public function getUserImage($userId){
             $userImages = UserImage::select(['path'])   
                                     ->where('user_id', $userId)
                                     ->pluck('path')->toArray();
